@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.million.server.mapper.user.UserTotalInfoMapper">
+
+    <select id="selectUserTotalInfo" parameterType="com.million.dto.user.UserTotalInfo" resultType="com.million.dto.user.UserTotalInfo">
+        SELECT
+        n.user_id,
+        n.user_mobile,
+        n.join_cnt,
+        n.succ_cnt,
+        n.fail_cnt,
+        n.rev_regu_total,
+        n.rev_red_total,
+        m.revival_total,
+        m.use_revival,
+        m.res_revival
+        FROM
+        (
+        SELECT
+        sum(ques_cnt = corrent_cnt) AS succ_cnt,
+        sum(ques_cnt != corrent_cnt) AS fail_cnt,
+        sum(
+        ques_cnt = corrent_cnt <![CDATA[|]]> ques_cnt != corrent_cnt
+        ) AS join_cnt,
+        user_id,
+        user_mobile,
+        sum(regu_score) As rev_regu_total,
+        sum(red_score) As rev_red_total
+        FROM
+        (
+        SELECT
+        a.user_id,
+        a.user_mobile,
+        a.act_id,
+        a.corrent_cnt,
+        a.gained_score,
+        g.ques_cnt,
+        g.regu_score,
+        g.red_score
+        FROM
+        user_act_hist a
+        LEFT JOIN act g ON a.act_id = g.id
+        ) c
+        GROUP BY
+        user_id,user_mobile
+        ) n
+        LEFT JOIN (
+        SELECT
+        sum(STATUS = '0') AS res_revival,
+        sum(STATUS = '1') AS use_revival,
+        sum(STATUS = '0' <![CDATA[|]]> STATUS = '1') AS revival_total,
+        user_id
+        FROM
+        revival_card
+        GROUP BY
+        user_id
+        ) m ON n.user_id = m.user_id
+        WHERE 1=1
+        <if test="user_id != null and user_id !=''">
+            and  ${user_id} =n.user_id
+        </if>
+        <if test="user_mobile != null and user_mobile !=''">
+            and  ${user_mobile} =n.user_mobile
+        </if>
+
+
+    </select>
+
+</mapper>

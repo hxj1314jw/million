@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/million-common/million-common.iml" filepath="$PROJECT_DIR$/million-common/million-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/million-dto/million-dto.iml" filepath="$PROJECT_DIR$/million-dto/million-dto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/million-generator/million-generator.iml" filepath="$PROJECT_DIR$/million-generator/million-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/million-monitor/million-monitor.iml" filepath="$PROJECT_DIR$/million-monitor/million-monitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/million-server/million-server.iml" filepath="$PROJECT_DIR$/million-server/million-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/millionwinner.iml" filepath="$PROJECT_DIR$/millionwinner.iml" />
+    </modules>
+  </component>
+</project>

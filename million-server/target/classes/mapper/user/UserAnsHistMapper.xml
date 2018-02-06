@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.million.server.mapper.user.UserAnsHistMapper">
+
+    <select id="selectUserAnswerInfo" parameterType="com.million.dto.user.UserAnsHist" resultType="com.million.dto.user.UserAnsHist">
+        SELECT * FROM USER_ANS_HIST
+        WHERE 1=1
+        <if test="user_id != null and user_id !=''">
+            and  ${user_id} =user_id
+        </if>
+        <if test="act_id != null and act_id !=''">
+            and  ${act_id} =act_id
+        </if>
+    </select>
+
+</mapper>

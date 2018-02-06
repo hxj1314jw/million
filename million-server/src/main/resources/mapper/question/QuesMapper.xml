@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.million.server.mapper.question.QuesMapper">
+    <select id="quesList" parameterType="string" resultType="com.million.dto.question.Ques">
+      select a.id as act_id,d.opt_desc,c.* from act a
+      LEFT JOIN act_ques b on a.id = b.act_id
+      LEFT JOIN ques c on b.ques_id = c.id
+      Left JOIN quest_opt d on c.id = d.ques_id and c.answer = d.opt_id
+      where c.id is not null
+        <if test="act_id != null and act_id !=''">
+        and a.id = #{act_id}
+        </if>
+        <if test="act_id == null or act_id ==''">
+        and to_days(a.modified_time) = to_days(now())
+        </if>
+    </select>
+
+    <insert id="insertQues" parameterType="com.million.dto.question.Ques" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ques(ques_desc,ques_analysis,answer,aval_status,created_time,modified_time,red_packet,ques_type)
+        values(
+          #{ques_desc},
+          #{ques_analysis},
+          #{answer},
+          #{aval_status},
+            now(),
+            now(),
+          #{red_packet},
+          #{ques_type}
+          );
+    </insert>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.million.server.mapper.card.RevivalCardMapper">
+
+    <select id="selectRevialCardInfoByUserId" parameterType="com.million.dto.card.RevivalCard" resultType="com.million.dto.card.RevivalCard">
+        SELECT * FROM REVIVAL_CARD
+        WHERE 1=1
+        <if test="user_id != null and user_id !=''">
+            and  ${user_id} =user_id
+        </if>
+    </select>
+
+</mapper>

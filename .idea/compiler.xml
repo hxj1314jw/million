@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="million-common" />
+        <module name="million-dto" />
+        <module name="million-generator" />
+        <module name="million-monitor" />
+        <module name="million-server" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="million-common" target="1.8" />
+      <module name="million-dto" target="1.8" />
+      <module name="million-generator" target="1.8" />
+      <module name="million-monitor" target="1.8" />
+      <module name="million-server" target="1.8" />
+      <module name="millionwinner" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

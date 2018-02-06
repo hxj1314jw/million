@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.million.server.mapper.activity.ActMapper">
+    <select id="NextActList" resultType="com.million.dto.activity.Act">
+       SELECT
+       b.actionDate,
+       b.actionTime,
+        b.act_time,
+        b.regu_score,
+        b.red_score,
+        b.ques_cnt,
+        b.act_status,
+		b.red_packet,
+       sum(b.red_packet) as red_cnt from
+        (
+        SELECT
+        date_format(act_time, '%Y-%m-%d') AS actionDate,
+        date_format(act_time, '%H:%i:%s') AS actionTime,
+        a.act_time,
+        a.regu_score,
+        a.red_score,
+        a.ques_cnt,
+        a.act_status,
+		b.red_packet
+        FROM
+        act a
+        LEFT JOIN(
+        SELECT
+				c.act_id,
+				b.red_packet
+			FROM
+				act_ques c
+			LEFT JOIN ques b ON c.ques_id = b.id
+        ) b on a.id=b.act_id
+        where act_status=1
+        <if test="id != null and id !=''">and id=#{id}
+        </if>
+        order by act_time) b
+        limit 1
+    </select>
+
+    <select id="LastActList" parameterType="string" resultType="com.million.dto.activity.Act">
+        select * from (select
+        a.id,
+        date_format(a.act_time, '%Y-%m-%d') AS actionDate,
+        date_format(a.act_time, '%H:%i:%s') AS actionTime,
+        a.regu_score,
+        if(b.comp_cnt>0,a.regu_score,0) as send_regu_score,
+        a.red_score,
+        c.send_red_score,
+        a.ques_cnt,
+        a.act_status,
+        a.join_cnt,
+        b.comp_cnt,
+        d.red_cnt
+        from
+        (select count(*) as join_cnt,a.* from (
+        SELECT * FROM act where act_status=3
+        <if test="id != null and id !=''">and id=#{id}
+        </if>
+        order by
+        act_time desc limit 1
+        )a LEFT JOIN user_act_hist b on a.id = b.act_id) a
+        ,
+        (select count(*) as comp_cnt from (
+        SELECT * FROM act where act_status=3
+        <if test="id != null and id !=''">
+            and id=#{id}
+        </if>
+                order by act_time desc limit 1
+        )a LEFT JOIN user_act_hist b on a.id = b.act_id
+        where a.ques_cnt = b.corrent_cnt ) b
+        ,
+        (
+        select if(sum(red_packet)>0,red_score,0) as send_red_score from (
+        SELECT c.ques_id,c.user_id,a.id,a.red_score,a.regu_score from (
+        SELECT * FROM act a
+        where a.act_status=3
+        <if test="id != null and id !=''">
+            and a.id=#{id}
+        </if>
+        order by a.act_time desc limit 1
+        ) a
+        LEFT JOIN user_act_hist b ON a.id = b.act_id
+        LEFT JOIN user_ans_hist c on a.id = c.act_id
+        where a.id = b.act_id and b.user_id = c .user_id
+        )e LEFT JOIN ques f on f.id = e.ques_id
+        )c
+        ,
+        (SELECT sum(b.red_packet) as red_cnt from
+        (SELECT b.
+        red_packet
+        FROM act a
+        LEFT JOIN(
+        SELECT c.act_id,b.red_packet
+        FROM act_ques c LEFT JOIN ques b ON c.ques_id = b.id
+        ) b on a.id=b.act_id
+        where act_status=3
+        <if test="id != null and id !=''">
+                and  a.id=#{id}
+        </if>
+                order by act_time desc) b
+                limit 1
+        )d
+      ) a
+        <if test="id != null and id !=''">
+        where  a.id=#{id}
+        </if>
+    </select>
+
+    <select id="SelectActList" parameterType="com.million.dto.activity.Act" resultType="com.million.dto.activity.Act">
+        SELECT
+        id,
+        date_format(act_time, '%Y-%m-%d') AS actionDate,
+        date_format(act_time, '%H:%i:%s') AS actionTime,
+        act_status
+        FROM ACT
+        WHERE 1=1
+        <if test="act_time != null">
+           and  act_time &gt;=${act_time}
+        </if>
+        <if test="act_status != null and act_status !=''">
+            and  ${act_status} =act_status
+        </if>
+    </select>
+</mapper>

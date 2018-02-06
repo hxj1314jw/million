@@ -1,0 +1,17 @@
+package ${package}.biz;
+
+import org.springframework.stereotype.Service;
+
+import ${package}.${className};
+import ${package}.mapper.${className}Mapper;
+import com.million.server.common.BaseService;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service
+public class ${className}Service extends BaseService<${className}Mapper,${className}> {
+}
